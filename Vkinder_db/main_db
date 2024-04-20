@@ -1,0 +1,38 @@
+import sqlalchemy
+import json
+from sqlalchemy.orm import sessionmaker
+from models_db import create_tables, UserActive, UserRated, UserRandom, Photo, CityList
+
+
+with open('connect_db.json', 'rt') as f:
+    data = list(json.load(f).values())
+
+DSN = f'{data[0]}://{data[1]}:{data[2]}@{data[3]}:{data[4]}/{data[5]}'
+engine = sqlalchemy.create_engine(DSN)
+Session = sessionmaker(bind=engine)
+session = Session()
+
+create_tables(engine)
+
+
+def add_user_active(user_id, first_name, last_name, age, sex, city_id):
+    with Session() as session:
+        user_active_all = session.query(UserActive).all()
+        if user_id not in [user[0] for user in user_active_all]:
+            user = UserActive(user_id=user_id, first_name=first_name, last_name=last_name,
+                              age=age, sex=sex, city_id=city_id)
+            session.add(user)
+            session.commit()
+
+
+def add_user_random(random_id, first_name, last_name, vk_link, age, sex, city_id):
+    with Session() as session:
+        user_random_all = session.query(UserRandom).all()
+        if random_id not in [random[0] for random in user_random_all]:
+            random = UserRandom(random_id=random_id, first_name=first_name, last_name=last_name,
+                                vk_link=vk_link, age=age, sex=sex, city_id=city_id)
+            session.add(random)
+            session.commit()
+
+
+session.close()
