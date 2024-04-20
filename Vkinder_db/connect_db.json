@@ -1,0 +1,8 @@
+{
+"database": "database",
+"login": "login",
+"password": "password",
+"hostname": "hostname",
+"port": "port",
+"dbname": "vkinder_db"
+}
